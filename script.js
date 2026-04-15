@@ -5,7 +5,7 @@ const API_URL = 'https://corsproxy.io/?https://development-internship-api.geopos
 const GIT_USER = 'AtkJr'; // Seu usuário do GitHub
 
 // ==========================================
-// 2. FUNÇÃO PRINCIPAL (O Motor do App)
+// 2. FUNÇÃO PRINCIPAL
 // ==========================================
 async function buscarSelecoes() {
     try {
@@ -52,7 +52,7 @@ async function buscarSelecoes() {
 }
 
 // ==========================================
-// 3. FUNÇÕES AUXILIARES (As Engrenagens)
+// 3. FUNÇÕES AUXILIARES
 // ==========================================
 
 // Função que embaralha e divide as seleções
@@ -97,17 +97,15 @@ function desenharGruposNaTela(grupos) {
     }
 }
 
-// Nova Função: Gera uma quantidade aleatória de gols (de 0 a 5)
 function gerarGols() {
     return Math.floor(Math.random() * 6);
 }
 
-// Nova Função: Gera as partidas e os placares de cada grupo
 function simularFaseDeGrupos(grupos) {
     const todosOsJogos = {};
 
     for (const [letra, times] of Object.entries(grupos)) {
-        // Confrontos padrão de um grupo de 4 times (índices 0, 1, 2, 3)
+        // Confrontos
         const partidasDoGrupo = [
             { timeA: times[0], timeB: times[1], golsA: gerarGols(), golsB: gerarGols() },
             { timeA: times[2], timeB: times[3], golsA: gerarGols(), golsB: gerarGols() },
@@ -127,14 +125,11 @@ function simularFaseDeGrupos(grupos) {
 // 4. INÍCIO DO PROGRAMA
 // ==========================================
 buscarSelecoes();
-// Função para calcular os pontos e definir quem passa para as Oitavas
+// calculo de pontos e definição de 1° e 2° lugar rumo às Oitavas
 function calcularClassificacao(grupos, jogos) {
-    const classificados = []; // Aqui vamos guardar os 16 times que passam
-
-    // Passa por cada grupo (A, B, C...)
+    const classificados = []; 
     for (const [letra, times] of Object.entries(grupos)) {
         
-        // 1. Cria uma "tabela" zerada para cada time do grupo
         const tabela = times.map(time => ({
             time: time,
             pontos: 0,
@@ -143,14 +138,13 @@ function calcularClassificacao(grupos, jogos) {
             saldoDeGols: 0
         }));
 
-        // 2. Analisa cada jogo do grupo para somar os pontos e gols
         const partidasDoGrupo = jogos[letra];
         partidasDoGrupo.forEach(jogo => {
             // Acha os times na nossa tabela pelo ID (token)
             const statA = tabela.find(t => t.time.token === jogo.timeA.token);
             const statB = tabela.find(t => t.time.token === jogo.timeB.token);
 
-            // Soma os gols
+            // Soma dos "gols"
             statA.golsFeitos += jogo.golsA;
             statA.golsSofridos += jogo.golsB;
             statA.saldoDeGols = statA.golsFeitos - statA.golsSofridos;
@@ -159,7 +153,7 @@ function calcularClassificacao(grupos, jogos) {
             statB.golsSofridos += jogo.golsA;
             statB.saldoDeGols = statB.golsFeitos - statB.golsSofridos;
 
-            // Define os pontos de vitória ou empate
+            // Definição dos pontos
             if (jogo.golsA > jogo.golsB) {
                 statA.pontos += 3; 
             } else if (jogo.golsB > jogo.golsA) {
@@ -170,31 +164,26 @@ function calcularClassificacao(grupos, jogos) {
             }
         });
 
-        // 3. Ordena a tabela seguindo as regras da prova
         tabela.sort((a, b) => {
             if (b.pontos !== a.pontos) return b.pontos - a.pontos; // 1º critério: Pontos
             if (b.saldoDeGols !== a.saldoDeGols) return b.saldoDeGols - a.saldoDeGols; // 2º critério: Saldo
             return Math.random() - 0.5; // 3º critério: Sorteio
         });
 
-        // 4. Pega os 2 melhores (índices 0 e 1) e coloca na lista de classificados
         classificados.push(tabela[0].time);
         classificados.push(tabela[1].time);
     }
 
-    // Retorna os 16 times que vão para as Oitavas
     return classificados;
 }
 // ==========================================
 // 5. FUNÇÕES DO MATA-MATA E PÊNALTIS
 // ==========================================
 
-// Função para simular os pênaltis caso dê empate no tempo normal
 function simularPenaltis() {
     let penaltisA = 0;
     let penaltisB = 0;
     
-    // Para não ter empate eterno nos pênaltis, repetimos até alguém ganhar
     while (penaltisA === penaltisB) {
         penaltisA = Math.floor(Math.random() * 5) + 1; // Pode fazer de 1 a 5 gols
         penaltisB = Math.floor(Math.random() * 5) + 1;
@@ -202,12 +191,10 @@ function simularPenaltis() {
     return { penaltisA, penaltisB };
 }
 
-// Função genérica que simula qualquer fase do mata-mata (oitavas, quartas, etc)
 function simularFaseMataMata(timesDaFase) {
     const vencedores = [];
     const resultados = [];
 
-    // Pega de 2 em 2 times para fazer o confronto
     for (let i = 0; i < timesDaFase.length; i += 2) {
         const timeA = timesDaFase[i];
         const timeB = timesDaFase[i + 1];
@@ -218,30 +205,26 @@ function simularFaseMataMata(timesDaFase) {
         let golsPenaltyB = 0;
         let vencedor = null;
 
-        // Define quem ganhou no tempo normal
         if (golsA > golsB) {
             vencedor = timeA;
         } else if (golsB > golsA) {
             vencedor = timeB;
         } else {
-            // Se empatou, chama a função de pênaltis!
+            // Se houve empate, pênaltis!
             const resultPenaltis = simularPenaltis();
             golsPenaltyA = resultPenaltis.penaltisA;
             golsPenaltyB = resultPenaltis.penaltisB;
-            // O vencedor é quem fez mais gols de pênalti
             vencedor = (golsPenaltyA > golsPenaltyB) ? timeA : timeB;
         }
 
-        // Guarda todos os dados do jogo (isso vai ser útil na hora de enviar pra API no final)
         resultados.push({ timeA, timeB, golsA, golsB, golsPenaltyA, golsPenaltyB, vencedor });
         vencedores.push(vencedor);
     }
 
-    // Retorna quem passou de fase e os placares
     return { vencedores, resultados };
 }
 
-// Função que organiza o chaveamento da prova e roda todas as fases
+// Organizador de chaveamento 
 function jogarMataMata(classificados) {
     // Organizando a lista para os confrontos exatos da "Figura 1"
     let timesChaveamento = [
@@ -255,13 +238,11 @@ function jogarMataMata(classificados) {
         classificados[14], classificados[13]  // 1º do H  x  2º do G
     ];
 
-    // Simulando fase a fase jogando os vencedores da anterior
     const oitavas = simularFaseMataMata(timesChaveamento);
     const quartas = simularFaseMataMata(oitavas.vencedores);
     const semis = simularFaseMataMata(quartas.vencedores);
     const final = simularFaseMataMata(semis.vencedores);
 
-    // O grande campeão será o único time que sobrou na lista de vencedores da Final
     const campeao = final.vencedores[0];
 
     return {
@@ -276,17 +257,14 @@ function jogarMataMata(classificados) {
 // 6. RENDERIZANDO O MATA-MATA NA TELA
 // ==========================================
 
-// Função auxiliar para montar o HTML de uma lista de jogos
 function gerarHtmlJogos(jogos) {
     let html = '';
     jogos.forEach(jogo => {
-        // Verifica se teve pênaltis para exibir o aviso
         let avisoPenaltis = '';
         if (jogo.golsPenaltyA > 0 || jogo.golsPenaltyB > 0) {
             avisoPenaltis = `<span class="penaltis">Pênaltis: ${jogo.golsPenaltyA} x ${jogo.golsPenaltyB}</span>`;
         }
 
-        // Verifica quem ganhou para aplicar a classe CSS "vencedor" que pinta de verde neon
         let classeVencedorA = jogo.vencedor.nome === jogo.timeA.nome ? 'vencedor' : '';
         let classeVencedorB = jogo.vencedor.nome === jogo.timeB.nome ? 'vencedor' : '';
 
@@ -307,11 +285,9 @@ function gerarHtmlJogos(jogos) {
     return html;
 }
 
-// Função principal que desenha a tabela do mata-mata
 function desenharMataMataNaTela(copa) {
     const container = document.getElementById('mata-mata-container');
     
-    // Monta as colunas usando a função auxiliar que criamos acima
     let htmlCompleto = `
         <div class="bracket-fase">
             <h3>Oitavas</h3>
@@ -358,12 +334,11 @@ btnMusica.addEventListener('click', () => {
     tocando = !tocando;
 });
 // ==========================================
-// 8. ENVIANDO O CAMPEÃO PARA A API (PASSO 7)
+// 8. ENVIANDO O CAMPEÃO PARA A API
 // ==========================================
 const API_POST_URL = 'https://corsproxy.io/?https://development-internship-api.geopostenergy.com/WorldCup/FinalResult';
 
 async function enviarCampeao(jogoFinal) {
-    // Montando o objeto JSON com as chaves exatas que a Katalyst pediu no PDF
     const dadosFinal = {
         "equipeA": jogoFinal.timeA.token,
         "equipeB": jogoFinal.timeB.token,
@@ -382,7 +357,6 @@ async function enviarCampeao(jogoFinal) {
                 'Content-Type': 'application/json', // Avisa o servidor que é um JSON
                 'git-user': GIT_USER // O seu usuário do GitHub obrigatório
             },
-            // Converte o nosso objeto JavaScript em um texto JSON para viajar pela internet
             body: JSON.stringify(dadosFinal) 
         });
 
