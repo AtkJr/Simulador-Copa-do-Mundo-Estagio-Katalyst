@@ -1,0 +1,195 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+/* Fundo com as cores da África do Sul */
+body {
+    background: linear-gradient(135deg, #FFB81C 0%, #E3000F 100%);
+    background-attachment: fixed;
+    color: #111;
+    padding: 20px;
+}
+
+/* Botão de Música */
+.btn-play {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #007A4D; /* Verde Bandeira */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    z-index: 100;
+    transition: transform 0.2s;
+}
+
+.btn-play:hover {
+    transform: scale(1.1);
+    background-color: #005c3a;
+}
+
+/* Cabeçalho */
+.header-2010 {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+}
+
+.header-2010 h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* A Jabulani */
+.jabulani-text {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #FFB81C; /* Amarelo */
+    background: rgba(0,0,0,0.5);
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    margin-top: 10px;
+}
+
+/* Fase de Grupos */
+#container-grupos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto 50px auto;
+}
+
+.grupo-card {
+    background-color: #fff;
+    border-radius: 10px;
+    border-top: 8px solid #000;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+}
+
+.grupo-card h2 {
+    text-align: center;
+    background-color: #000;
+    color: #fff;
+    padding: 10px;
+    font-size: 1.5rem;
+}
+
+.grupo-card li {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    font-weight: 500;
+}
+
+.grupo-card li:last-child {
+    border-bottom: none;
+}
+
+/* Título do Mata-Mata */
+.titulo-fase {
+    text-align: center;
+    color: #fff;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+    margin-bottom: 20px;
+}
+
+/* Mata-Mata */
+#mata-mata-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    overflow-x: auto;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.bracket-fase {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    min-width: 250px;
+}
+
+.bracket-fase h3 {
+    text-align: center;
+    color: #E3000F; /* Vermelho */
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    border-bottom: 3px solid #FFB81C;
+    padding-bottom: 5px;
+}
+
+.partida-card {
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.partida-card .time {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    color: #333;
+}
+
+.partida-card .time:first-child {
+    border-bottom: 1px solid #eee;
+}
+
+.partida-card .vencedor {
+    color: #007A4D; /* Verde */
+    font-weight: 700;
+}
+
+.penaltis {
+    display: block;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #E3000F;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+/* O Campeão */
+.bracket-campeao {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 280px;
+}
+
+.bracket-campeao h3 {
+    color: #000;
+}
+
+.campeao-nome {
+    background: #000;
+    color: #FFB81C; /* Texto Amarelo */
+    padding: 20px 30px;
+    border-radius: 10px;
+    font-size: 2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    border: 4px solid #007A4D; /* Borda Verde */
+}
